@@ -4,16 +4,21 @@ namespace diploma.Estimation.API.Services;
 
 public class EstimationServiceManager
 {
-    private readonly IEstimateCriterionService _estimateCriterionService;
     private readonly IEstimateService _estimateService;
+    private readonly ICriterionService _criterionService;
+    private readonly IEstimateCriterionService _estimateCriterionService;
 
-    public EstimationServiceManager(IEstimateService estimateService, IEstimateCriterionService estimateCriterionService)
+    public EstimationServiceManager(
+        IEstimateService estimateService, 
+        ICriterionService criterionService,
+        IEstimateCriterionService estimateCriterionService)
     {
-        _estimateCriterionService = estimateCriterionService;
         _estimateService = estimateService;
+        _criterionService = criterionService;
+        _estimateCriterionService = estimateCriterionService;
     }
 
     public IEstimateService Estimate => _estimateService;
-
+    public ICriterionService Criterion => _criterionService;
     public IEstimateCriterionService EstimateCriterion => _estimateCriterionService;
 }

@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Estimation.API.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("/api/estimation/{estimationId:guid}")]
 public class EstimationController : ControllerBase
 {
     private readonly EstimationServices _estimationServices;
@@ -18,10 +18,10 @@ public class EstimationController : ControllerBase
         _estimationServiceManager = estimationServices.estimationServiceManager;
     }
 
-    [HttpGet("{id: guid}", Name = "GetEstimateById")]
-    public async Task<IResult> GetEstimateById(Guid id)
+    [HttpGet(Name = "GetEstimateById")]
+    public async Task<IResult> GetEstimateById(Guid estimationId)
     {
-        var estimateDto = await _estimationServiceManager.Estimate.GetEstimateById(id, false);
+        var estimateDto = await _estimationServiceManager.Estimate.GetEstimateById(estimationId, false);
 
         return TypedResults.Ok(estimateDto);
     }
@@ -34,18 +34,18 @@ public class EstimationController : ControllerBase
         return Results.CreatedAtRoute("GetEstimateById", new { id = estimateDto.Id }, estimateDto);
     }
 
-    [HttpPut("{id: guid}")]
-    public async Task<IResult> UpdateEstimate(Guid id, [FromBody] EstimateDtoForUpdate estimateForUpdate)
+    [HttpPut]
+    public async Task<IResult> UpdateEstimate(Guid estimationId, [FromBody] EstimateDtoForUpdate estimateForUpdate)
     {
-        await _estimationServiceManager.Estimate.UpdateEstimate(id, estimateForUpdate, false);
+        await _estimationServiceManager.Estimate.UpdateEstimate(estimationId, estimateForUpdate, false);
 
         return TypedResults.NoContent();
     }
 
-    [HttpDelete("{id: guid}")]
-    public async Task<IResult> DeleteEstimate(Guid id)
+    [HttpDelete]
+    public async Task<IResult> DeleteEstimate(Guid estimationId)
     {
-        await _estimationServiceManager.Estimate.DeleteEstimate(id, false);
+        await _estimationServiceManager.Estimate.DeleteEstimate(estimationId, false);
 
         return TypedResults.NoContent();
     }

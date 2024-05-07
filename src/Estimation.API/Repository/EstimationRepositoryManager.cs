@@ -23,9 +23,7 @@ public class EstimationRepositoryManager
     }
 
     public IEstimateRepository Estimate => _estimateRepository;
-
     public ICriterionRepository Criterion => _criterionRepository;
-
     public IEstimateCriterionRepository EstimateCriterion => _estimateCriterionRepository;
 
     public Task SaveChangesAsync() => _estimationContext.SaveChangesAsync();
