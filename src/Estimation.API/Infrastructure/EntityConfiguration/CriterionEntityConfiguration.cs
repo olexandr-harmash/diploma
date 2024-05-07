@@ -8,7 +8,6 @@ public class CriterionEntityConfiguration : IEntityTypeConfiguration<Criterion>
     public void Configure(EntityTypeBuilder<Criterion> builder)
     {
         builder.Property(pr => pr.Name)
-            .HasMaxLength(60)
-            .IsRequired();
+            .HasMaxLength(50);
     }
 }

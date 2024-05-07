@@ -12,7 +12,7 @@ using diploma.Estimation.API.Infrastructure;
 namespace Estimation.API.Infrastructure.Migrations
 {
     [DbContext(typeof(EstimationContext))]
-    [Migration("20240505054136_Initial")]
+    [Migration("20240507143148_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -37,8 +37,8 @@ namespace Estimation.API.Infrastructure.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(60)
-                        .HasColumnType("character varying(60)");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.HasKey("Id");
 
@@ -53,8 +53,8 @@ namespace Estimation.API.Infrastructure.Migrations
 
                     b.Property<string>("CreatedBy")
                         .IsRequired()
-                        .HasMaxLength(60)
-                        .HasColumnType("character varying(60)");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -62,8 +62,8 @@ namespace Estimation.API.Infrastructure.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(60)
-                        .HasColumnType("character varying(60)");
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<Guid>("ProjectId")
                         .HasColumnType("uuid");
@@ -85,19 +85,14 @@ namespace Estimation.API.Infrastructure.Migrations
                     b.Property<Guid>("EstimateId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("EstimateId1")
-                        .HasColumnType("uuid");
-
-                    b.Property<int>("Score")
-                        .HasColumnType("integer");
+                    b.Property<double>("Value")
+                        .HasColumnType("double precision");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CriterionId");
 
                     b.HasIndex("EstimateId");
-
-                    b.HasIndex("EstimateId1");
 
                     b.ToTable("EstimateCriterions");
                 });
@@ -110,15 +105,9 @@ namespace Estimation.API.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("diploma.Estimation.API.Model.Estimate", null)
+                    b.HasOne("diploma.Estimation.API.Model.Estimate", "Estimate")
                         .WithMany("Criterions")
                         .HasForeignKey("EstimateId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("diploma.Estimation.API.Model.Estimate", "Estimate")
-                        .WithMany()
-                        .HasForeignKey("EstimateId1")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

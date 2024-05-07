@@ -8,13 +8,12 @@ public class EstimateEntityConfiguration : IEntityTypeConfiguration<Estimate>
     public void Configure(EntityTypeBuilder<Estimate> builder)
     {
         builder.Property(p => p.Name).IsRequired()
-            .HasMaxLength(60);
+            .HasMaxLength(50);
 
         builder.Property(p => p.CreatedBy).IsRequired()
-            .HasMaxLength(60);
+            .HasMaxLength(50);
 
-        builder.HasMany(p => p.Criterions)
-            .WithOne()
-            .HasForeignKey(pc => pc.EstimateId);
+        builder.HasMany(e => e.Criterions)
+            .WithOne(ec => ec.Estimate);
     }
 }
