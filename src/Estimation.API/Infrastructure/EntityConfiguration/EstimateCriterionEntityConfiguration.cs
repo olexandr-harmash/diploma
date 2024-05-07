@@ -7,9 +7,10 @@ public class EstimateCriterionEntityConfiguration : IEntityTypeConfiguration<Est
 {
     public void Configure(EntityTypeBuilder<EstimateCriterion> builder)
     {
-        builder.HasOne(pc => pc.Criterion)
-            .WithMany()
-            .HasForeignKey(pc => pc.CriterionId)
-            .IsRequired();
+        builder.HasOne(ec => ec.Estimate)
+            .WithMany(e => e.Criterions);
+
+        builder.HasOne(ec => ec.Criterion)
+            .WithMany();
     }
 }

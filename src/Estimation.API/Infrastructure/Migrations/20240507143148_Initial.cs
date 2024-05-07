@@ -16,7 +16,7 @@ namespace Estimation.API.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Name = table.Column<string>(type: "character varying(60)", maxLength: 60, nullable: false),
+                    Name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     Description = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
@@ -30,9 +30,9 @@ namespace Estimation.API.Infrastructure.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     ProjectId = table.Column<Guid>(type: "uuid", nullable: false),
-                    Name = table.Column<string>(type: "character varying(60)", maxLength: 60, nullable: false),
+                    Name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     Description = table.Column<string>(type: "text", nullable: false),
-                    CreatedBy = table.Column<string>(type: "character varying(60)", maxLength: 60, nullable: false)
+                    CreatedBy = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -44,10 +44,9 @@ namespace Estimation.API.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Score = table.Column<int>(type: "integer", nullable: false),
+                    Value = table.Column<double>(type: "double precision", nullable: false),
                     CriterionId = table.Column<Guid>(type: "uuid", nullable: false),
-                    EstimateId = table.Column<Guid>(type: "uuid", nullable: false),
-                    EstimateId1 = table.Column<Guid>(type: "uuid", nullable: false)
+                    EstimateId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -64,12 +63,6 @@ namespace Estimation.API.Infrastructure.Migrations
                         principalTable: "Estimations",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_EstimateCriterions_Estimations_EstimateId1",
-                        column: x => x.EstimateId1,
-                        principalTable: "Estimations",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -81,11 +74,6 @@ namespace Estimation.API.Infrastructure.Migrations
                 name: "IX_EstimateCriterions_EstimateId",
                 table: "EstimateCriterions",
                 column: "EstimateId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_EstimateCriterions_EstimateId1",
-                table: "EstimateCriterions",
-                column: "EstimateId1");
         }
 
         /// <inheritdoc />
