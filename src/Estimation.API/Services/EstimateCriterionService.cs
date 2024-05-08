@@ -17,11 +17,22 @@ public class EstimateCriterionService : IEstimateCriterionService
         _estimationMapper = estimationMapper;
     }
 
-    public async Task<EstimateCriterionDto> CreateEstimateCriterion(Guid estimateId, Guid criterionId, EstimateCriterionDtoForCreate estimate)
+    public async Task<EstimateCriterionDto> CreateEstimateCriterion(Guid estimateId, Guid criterionId, EstimateCriterionDtoForCreate estimate, bool trackChanges)
     {
-        var estimateCriterionEntity = _estimationMapper.Map<EstimateCriterion>(estimate);
+        await GetEstimateAndCheckIfExists(estimateId, trackChanges);
 
-        _estimationRepositoryManager.EstimateCriterion.CreateEstimateCriterion(estimateCriterionEntity);
+        await GetCriterionAndCheckIfExists(criterionId, trackChanges);
+
+        var estimateCriterionEntity = await _estimationRepositoryManager.EstimateCriterion.GetEstimateCriterion(estimateId, criterionId, trackChanges);
+
+        if (estimateCriterionEntity != null)
+        {
+            throw new EstimateCriterionBadRequestException(estimateId, criterionId);
+        }
+
+        estimateCriterionEntity = _estimationMapper.Map<EstimateCriterion>(estimate);
+
+        _estimationRepositoryManager.EstimateCriterion.CreateEstimateCriterion(estimateId, criterionId, estimateCriterionEntity);
 
         await _estimationRepositoryManager.SaveChangesAsync();
 

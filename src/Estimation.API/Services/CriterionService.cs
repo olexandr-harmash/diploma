@@ -30,6 +30,15 @@ public class CriterionService : ICriterionService
         return criterionCollectioeToReturn;
     }
 
+    public async Task<IEnumerable<CriterionDto>> FetchFullCriterionCollection(bool trackChanges)
+    {
+        var criterionCollectionEntity = await _estimationRepositoryManager.Criterion.FetchFullCriterionCollection(trackChanges);
+
+        var criterionCollectionToReturn = _estimationMapper.Map<IEnumerable<CriterionDto>>(criterionCollectionEntity);
+
+        return criterionCollectionToReturn;
+    }
+
     public async Task<CriterionDto> GetCriterionById(Guid id, bool trackChanges)
     {
         var criterionEntity = await _estimationRepositoryManager.Criterion.GetCriterionById(id, trackChanges);

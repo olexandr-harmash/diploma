@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using diploma.Estimation.API.Dto;
 using diploma.Estimation.API.Services.Abstractions;
+using Microsoft.EntityFrameworkCore;
+using Npgsql;
 using System.Text.Json;
 
 namespace diploma.Estimation.API.Infrastructure;
@@ -29,17 +31,22 @@ public class EstimationContextSeed : IDbSeeder<EstimationContext>
 
     public async Task SeedAsync(EstimationContext context)
     {
-        var contentRootPath = _env.ContentRootPath;
-        var sourcePath = Path.Combine(contentRootPath, _setupFolder, _setupFile);
+        ((NpgsqlConnection)context.Database.GetDbConnection()).ReloadTypes();
 
-        var sourceJson = File.ReadAllText(sourcePath);
-        var criterions = JsonSerializer.Deserialize<IEnumerable<CriterionDtoForCreate>>(sourceJson);
-
-        if (criterions == null)
+        if (!context.Criterions.Any())
         {
-            throw new Exception($"Failed to load or validate criterions from {contentRootPath}");
-        }
+            var contentRootPath = _env.ContentRootPath;
+            var sourcePath = Path.Combine(contentRootPath, _setupFolder, _setupFile);
 
-        await _criterionService.CreateCriterionCollection(criterions, false);
+            var sourceJson = File.ReadAllText(sourcePath);
+            var criterions = JsonSerializer.Deserialize<IEnumerable<CriterionDtoForCreate>>(sourceJson);
+
+            if (criterions == null)
+            {
+                throw new Exception($"Failed to load or validate criterions from {contentRootPath}");
+            }
+
+            await _criterionService.CreateCriterionCollection(criterions, false);
+        }
     }
 }

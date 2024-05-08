@@ -18,6 +18,10 @@ public class CriterionRepository : RepositoryBase<Criterion, EstimationContext>,
         }
     }
 
+    public async Task<IEnumerable<Criterion>> FetchFullCriterionCollection(bool trackChanges) =>
+       await FindAll(trackChanges).ToListAsync();
+
+
     public async Task<Criterion?> GetCriterionById(Guid id, bool trackChanges) =>
         await FindByCondition(x => id.Equals(x.Id), trackChanges).SingleOrDefaultAsync();
 }

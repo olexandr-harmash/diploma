@@ -10,7 +10,12 @@ public class EstimateCriterionRepository : RepositoryBase<EstimateCriterion, Est
     {
     }
 
-    public void CreateEstimateCriterion(EstimateCriterion estimateCriterion) => Create(estimateCriterion);
+    public void CreateEstimateCriterion(Guid estimateId, Guid criterionId, EstimateCriterion estimateCriterion)
+    {
+        estimateCriterion.EstimateId = estimateId;
+        estimateCriterion.CriterionId = criterionId;
+        Create(estimateCriterion);
+    }
 
     public void DeleteEstimateCriterion(EstimateCriterion estimateCriterion) => Delete(estimateCriterion);
 

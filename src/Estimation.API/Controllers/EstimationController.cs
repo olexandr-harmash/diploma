@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Estimation.API.Controllers;
 
 [ApiController]
-[Route("/api/estimation/{estimationId:guid}")]
+[Route("/api/estimation")]
 public class EstimationController : ControllerBase
 {
     private readonly EstimationServices _estimationServices;
@@ -18,7 +18,7 @@ public class EstimationController : ControllerBase
         _estimationServiceManager = estimationServices.estimationServiceManager;
     }
 
-    [HttpGet(Name = "GetEstimateById")]
+    [HttpGet("{estimationId:guid}", Name = "GetEstimateById")]
     public async Task<IResult> GetEstimateById(Guid estimationId)
     {
         var estimateDto = await _estimationServiceManager.Estimate.GetEstimateById(estimationId, false);
@@ -31,7 +31,7 @@ public class EstimationController : ControllerBase
     {
         var estimateDto = await _estimationServiceManager.Estimate.CreateEstimate(estimateForCreate);
 
-        return Results.CreatedAtRoute("GetEstimateById", new { id = estimateDto.Id }, estimateDto);
+        return Results.CreatedAtRoute("GetEstimateById", new { estimationId = estimateDto.Id }, estimateDto);
     }
 
     [HttpPut]
@@ -42,7 +42,7 @@ public class EstimationController : ControllerBase
         return TypedResults.NoContent();
     }
 
-    [HttpDelete]
+    [HttpDelete("{estimationId:guid}")]
     public async Task<IResult> DeleteEstimate(Guid estimationId)
     {
         await _estimationServiceManager.Estimate.DeleteEstimate(estimationId, false);

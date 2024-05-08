@@ -52,6 +52,11 @@ public class EstimationService : EstimationServiceBase, IEstimationService
     {
         var criteriaValueCollection = estimate.GetCriterionValueCollection();
 
+        if (criteriaValueCollection.Count() != _sizeLayer0) 
+        {
+            throw new EstimationServiceBadPatternSizeException(estimate.Id);
+        }
+
         var patternNumber = TestPattern(criteriaValueCollection.ToList());
 
         return (Qualification)patternNumber;
