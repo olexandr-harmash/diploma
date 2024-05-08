@@ -5,6 +5,7 @@ using diploma.Estimation.API.Services;
 using diploma.Estimation.API.Repository.Abstractions;
 using diploma.Estimation.API.Repository;
 using diploma.Estimation.API.Services.Abstractions;
+using diploma.Estimation.API.Controllers;
 
 namespace diploma.Estimation.API.Extensions;
 
@@ -44,6 +45,8 @@ public static class Extensions
         {
    
         });
+
+        builder.Services.AddScoped<EstimationServices>();
 
         builder.Services.AddScoped<ICriterionRepository, CriterionRepository>();
         builder.Services.AddScoped<IEstimateRepository, EstimateRepository>();

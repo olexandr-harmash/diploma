@@ -1,11 +1,12 @@
 ﻿using diploma.Estimation.API.Dto;
 using diploma.Estimation.API.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace diploma.Estimation.API.Controllers;
 
 [ApiController]
-[Route("api/estimation/{estimationId:guid}/criterion/{criterionId:guid}")]
+[Route("api/estimation/{estimationId:guid}")]
 public class EstimationCriterionController
 {
     private readonly EstimationServices _estimationServices;
@@ -17,40 +18,41 @@ public class EstimationCriterionController
         _estimationServiceManager = estimationServices.estimationServiceManager;
     }
 
-    [HttpGet(Name = "GetEstimateCriterion")]
-    public async Task<IResult> GetEstimateCriterion(Guid estimateId, Guid criterionId)
+    [HttpGet("criterion/{criterionId}", Name = "GetEstimateCriterion")]
+    public async Task<IResult> GetEstimateCriterion(Guid estimationId, Guid criterionId)
     {
-        var estimateDto = await _estimationServiceManager.EstimateCriterion.GetEstimateCriterion(estimateId, criterionId, false);
+        var estimateDto = await _estimationServiceManager.EstimateCriterion.GetEstimateCriterion(estimationId, criterionId, false);
 
         return TypedResults.Ok(estimateDto);
     }
 
-    [HttpPost]
-    public async Task<IResult> CreateEstimateCriterion(Guid estimateId, Guid criterionId, [FromBody] EstimateCriterionDtoForCreate estimateForCreate)
+    [HttpPost("criterion/{criterionId:guid}")]
+    public async Task<IResult> CreateEstimateCriterion(Guid estimationId, Guid criterionId, [FromBody] EstimateCriterionDtoForCreate estimateForCreate)
     {
-        var estimateCriterionDto = await _estimationServiceManager.EstimateCriterion.CreateEstimateCriterion(estimateId, criterionId, estimateForCreate);
+        var estimateCriterionDto = await _estimationServiceManager.EstimateCriterion.CreateEstimateCriterion(estimationId, criterionId, estimateForCreate, false);
 
         return Results.CreatedAtRoute(
-            "GetEstimateCriterion", 
-            new { 
-                estimateId = estimateCriterionDto.EstimateId,
+            "GetEstimateCriterion",
+            new
+            {
+                estimationId = estimateCriterionDto.EstimateId,
                 criterionId = estimateCriterionDto.CriterionId,
             },
             estimateCriterionDto);
     }
 
-    [HttpPut]
-    public async Task<IResult> UpdateEstimateCriterion(Guid estimateId, Guid criterionId, [FromBody] EstimateCriterionDtoForUpdate estimateForUpdate)
+    [HttpPut("criterion/{criterionId:guid}")]
+    public async Task<IResult> UpdateEstimateCriterion(Guid estimationId, Guid criterionId, [FromBody] EstimateCriterionDtoForUpdate estimateForUpdate)
     {
-        await _estimationServiceManager.EstimateCriterion.UpdateEstimateCriterion(estimateId, criterionId, estimateForUpdate, false);
+        await _estimationServiceManager.EstimateCriterion.UpdateEstimateCriterion(estimationId, criterionId, estimateForUpdate, false);
 
         return TypedResults.NoContent();
     }
 
-    [HttpDelete]
-    public async Task<IResult> DeleteEstimateCriterion(Guid estimateId, Guid criterionId)
+    [HttpDelete("criterion/{criterionId:guid}")]
+    public async Task<IResult> DeleteEstimateCriterion(Guid estimationId, Guid criterionId)
     {
-        await _estimationServiceManager.EstimateCriterion.DeleteEstimateCriterion(estimateId, criterionId, false);
+        await _estimationServiceManager.EstimateCriterion.DeleteEstimateCriterion(estimationId, criterionId, false);
 
         return TypedResults.NoContent();
     }

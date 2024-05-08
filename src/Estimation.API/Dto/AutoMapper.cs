@@ -13,5 +13,9 @@ public class AutoMapper : Profile
         CreateMap<Estimate, EstimateDto>();
         CreateMap<EstimateDtoForCreate, Estimate>();
         CreateMap<EstimateDtoForUpdate, Estimate>();
+
+        CreateMap<EstimateCriterion, EstimateCriterionDto>();
+        CreateMap<EstimateCriterionDtoForCreate, EstimateCriterion>();
+        CreateMap<EstimateCriterionDtoForUpdate, EstimateCriterion>();
     }
 }
