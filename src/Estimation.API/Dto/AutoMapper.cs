@@ -9,6 +9,7 @@ public class AutoMapper : Profile
         CreateMap<Criterion, CriterionDto>();
         CreateMap<CriterionDtoForCreate, Criterion>();
         CreateMap<CriterionDtoForCreate, Criterion>();
+
         CreateMap<Estimate, EstimateDto>();
         CreateMap<EstimateDtoForCreate, Estimate>();
         CreateMap<EstimateDtoForUpdate, Estimate>();

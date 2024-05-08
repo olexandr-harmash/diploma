@@ -53,6 +53,8 @@ public static class Extensions
         builder.Services.AddScoped<IEstimateService, EstimateService>();
         builder.Services.AddScoped<IEstimateCriterionService, EstimateCriterionService>();
 
+        builder.Services.AddSingleton<IEstimationService, EstimationService>();
+
         builder.Services.AddScoped<EstimationRepositoryManager>();
         builder.Services.AddScoped<EstimationServiceManager>();
 
