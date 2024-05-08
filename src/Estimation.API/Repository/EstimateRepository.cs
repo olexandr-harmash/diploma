@@ -16,5 +16,5 @@ public class EstimateRepository : RepositoryBase<Estimate, EstimationContext>, I
     public void DeleteEstimate(Estimate estimate) => Delete(estimate);
 
     public async Task<Estimate?> GetEstimateById(Guid id, bool trackChanges) =>
-        await FindByCondition(x => id.Equals(x.Id), trackChanges).SingleOrDefaultAsync();
+        await FindByCondition(x => id.Equals(x.Id), trackChanges).Include(e => e.Criterions).SingleOrDefaultAsync();
 }

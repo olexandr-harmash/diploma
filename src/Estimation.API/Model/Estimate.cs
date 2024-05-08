@@ -9,8 +9,8 @@ public class Estimate
     public string CreatedBy { get; set; }
     public IEnumerable<EstimateCriterion> Criterions { get; set; }
 
-    public IEnumerable<double> GetCriterionValueCollection()
+    public double[] GetCriterionValueCollection()
     {
-        return Criterions.Select(x => x.Value);
+        return Criterions.Select(x => x.Value).ToArray();
     }
 }

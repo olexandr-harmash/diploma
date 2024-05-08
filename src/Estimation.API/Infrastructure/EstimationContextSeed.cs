@@ -31,6 +31,7 @@ public class EstimationContextSeed : IDbSeeder<EstimationContext>
 
     public async Task SeedAsync(EstimationContext context)
     {
+        await context.Database.OpenConnectionAsync();
         ((NpgsqlConnection)context.Database.GetDbConnection()).ReloadTypes();
 
         if (!context.Criterions.Any())
