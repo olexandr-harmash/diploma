@@ -1,5 +1,4 @@
 ﻿namespace diploma.Estimation.API.Dto;
 
-public class EstimateCriterionDtoForUpdate
-{
-}
+public class EstimateCriterionDtoForUpdate(double Value);
+

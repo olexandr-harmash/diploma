@@ -10,6 +10,14 @@ public class CriterionRepository : RepositoryBase<Criterion, EstimationContext>,
     {
     }
 
+    public void CreateCriterionCollection(IEnumerable<Criterion> criterionCollection, bool trackChanges)
+    {
+        foreach (var criterion in criterionCollection)
+        {
+            Create(criterion);
+        }
+    }
+
     public async Task<Criterion?> GetCriterionById(Guid id, bool trackChanges) =>
         await FindByCondition(x => id.Equals(x.Id), trackChanges).SingleOrDefaultAsync();
 }
