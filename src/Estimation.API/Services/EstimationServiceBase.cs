@@ -1,4 +1,6 @@
-﻿namespace diploma.Estimation.API.Services;
+﻿using Microsoft.Extensions.FileSystemGlobbing.Internal;
+
+namespace diploma.Estimation.API.Services;
 
 public class EstimationServiceBase
 {
@@ -6,23 +8,31 @@ public class EstimationServiceBase
     protected const int MAX_ITER = 1400;
     protected int _sizeLayer0;
     protected int _sizeLayer1;
-    private double _braking;
-    private List<double> _layer0;
-    private List<double> _layer1;
-    private List<double> _layer1Prev;
-    private List<List<double>> _weightHamming;
-    protected List<List<double>> _patterns;
+    protected double _braking;
+    protected double[] _layer0;
+    protected double[] _layer1;
+    protected double[] _layer1Prev;
+    protected double[,] _weightHamming;
+    protected double[][] _patterns;
 
     public void Train()
     {
+        _sizeLayer1 = _patterns.Count();
+        _sizeLayer0 = _patterns.First().Count();
+
+        _layer0 = new double[_sizeLayer0];
+        _layer1 = new double[_sizeLayer1];
+
+        _weightHamming = new double[_sizeLayer1, _sizeLayer0];
+
         _braking = 1.0 / (_sizeLayer1 * 2.0);
 
-        for (int fi = 0; fi < _patterns.Count; fi++)
+        for (int fi = 0; fi < _sizeLayer1; fi++)
         {
             _layer0 = _patterns[fi];
             for (int i = 0; i < _sizeLayer0; i++)
             {
-                _weightHamming[fi][i] = _layer0[i] * 0.5;
+                _weightHamming[fi, i] = _layer0[i] * 0.5;
             }
         }
     }
@@ -64,7 +74,7 @@ public class EstimationServiceBase
         double s = 0.0;
         for (int i = 0; i < _sizeLayer0; i++)
         {
-            s += _layer0[i] * _weightHamming[num][i];
+            s += _layer0[i] * _weightHamming[num, i];
         }
         return s;
     }
@@ -77,7 +87,7 @@ public class EstimationServiceBase
         }
     }
 
-    public int TestPattern(List<double> pattern)
+    public int TestPattern(double[] pattern)
     {
         _layer0 = pattern;
 
@@ -89,6 +99,6 @@ public class EstimationServiceBase
                 break;
         }
 
-        return _layer1.IndexOf(_layer1.Max());
+        return Array.IndexOf(_layer1, _layer1.Max());
     }
 }

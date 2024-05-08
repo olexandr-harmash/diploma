@@ -6,7 +6,7 @@ namespace diploma.Estimation.API.Services;
 
 public class EstimationService : EstimationServiceBase, IEstimationService
 {
-    private string _setupFile = "patterns.json";
+    private string _setupFile = "pattern.json";
     private string _setupFolder = "Setup";
 
     public enum Qualification
@@ -22,13 +22,13 @@ public class EstimationService : EstimationServiceBase, IEstimationService
         var contentRootPath = env.ContentRootPath;
         var sourcePath = Path.Combine(contentRootPath, _setupFolder, _setupFile);
 
-        bool PatternsHaveSameLength(List<List<double>> patterns) =>
-            patterns.All(innerList => innerList.Count == patterns.First().Count);
+        bool PatternsHaveSameLength(double[][] patterns) =>
+            patterns.Length % patterns.Rank == 0;
 
         try
         {
             var sourceJson = File.ReadAllText(sourcePath);
-            var patterns = JsonSerializer.Deserialize<List<List<double>>>(sourceJson);
+            var patterns = JsonSerializer.Deserialize<double[][]>(sourceJson);
 
             if (patterns == null || !PatternsHaveSameLength(patterns))
             {
@@ -36,8 +36,6 @@ public class EstimationService : EstimationServiceBase, IEstimationService
             }
 
             _patterns = patterns;
-            _sizeLayer1 = patterns.Count;
-            _sizeLayer0 = patterns.First().Count;
 
             Train();
         }
@@ -52,13 +50,13 @@ public class EstimationService : EstimationServiceBase, IEstimationService
     {
         var criteriaValueCollection = estimate.GetCriterionValueCollection();
 
-        if (criteriaValueCollection.Count() != _sizeLayer0) 
+        if (criteriaValueCollection.Length != _sizeLayer0)
         {
             throw new EstimationServiceBadPatternSizeException(estimate.Id);
         }
 
-        var patternNumber = TestPattern(criteriaValueCollection.ToList());
+        var patternIndex = TestPattern(criteriaValueCollection);
 
-        return (Qualification)patternNumber;
+        return (Qualification)patternIndex;
     }
 }
