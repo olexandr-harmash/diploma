@@ -1,6 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using diploma.Estimation.API.Infrastructure;
 using diploma.Shared.Exceptions;
+using diploma.Estimation.API.Services;
+using diploma.Estimation.API.Repository.Abstractions;
+using diploma.Estimation.API.Repository;
+using diploma.Estimation.API.Services.Abstractions;
 
 namespace diploma.Estimation.API.Extensions;
 
@@ -40,6 +44,17 @@ public static class Extensions
         {
    
         });
+
+        builder.Services.AddScoped<ICriterionRepository, CriterionRepository>();
+        builder.Services.AddScoped<IEstimateRepository, EstimateRepository>();
+        builder.Services.AddScoped<IEstimateCriterionRepository, EstimateCriterionRepository>();
+
+        builder.Services.AddScoped<ICriterionService, CriterionService>();
+        builder.Services.AddScoped<IEstimateService, EstimateService>();
+        builder.Services.AddScoped<IEstimateCriterionService, EstimateCriterionService>();
+
+        builder.Services.AddScoped<EstimationRepositoryManager>();
+        builder.Services.AddScoped<EstimationServiceManager>();
 
         if (builder.Environment.IsDevelopment())
         {
