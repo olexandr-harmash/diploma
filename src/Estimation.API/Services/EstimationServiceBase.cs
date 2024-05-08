@@ -15,6 +15,8 @@ public class EstimationServiceBase
 
     public void Train()
     {
+        _braking = 1.0 / (_sizeLayer1 * 2.0);
+
         for (int fi = 0; fi < _patterns.Count; fi++)
         {
             _layer0 = _patterns[fi];

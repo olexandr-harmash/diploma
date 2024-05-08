@@ -1,5 +1,3 @@
 ﻿namespace diploma.Estimation.API.Dto;
 
-public class CriterionDto
-{
-}
+public record CriterionDto(Guid Id, string Name, string Description);
