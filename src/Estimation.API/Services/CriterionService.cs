@@ -17,9 +17,22 @@ public class CriterionService : ICriterionService
         _estimationMapper = estimationMapper;
     }
 
+    public async Task<IEnumerable<CriterionDto>> CreateCriterionCollection(IEnumerable<CriterionDtoForCreate> criterionCollection, bool trackChanges)
+    {
+        var criterionCollectioeEntity = _estimationMapper.Map<IEnumerable<Criterion>>(criterionCollection);
+
+        _estimationRepositoryManager.Criterion.CreateCriterionCollection(criterionCollectioeEntity, trackChanges);
+
+        await _estimationRepositoryManager.SaveChangesAsync();
+
+        var criterionCollectioeToReturn = _estimationMapper.Map<IEnumerable<CriterionDto>>(criterionCollectioeEntity);
+
+        return criterionCollectioeToReturn;
+    }
+
     public async Task<CriterionDto> GetCriterionById(Guid id, bool trackChanges)
     {
-        var criterionEntity = _estimationRepositoryManager.Criterion.GetCriterionById(id, trackChanges);
+        var criterionEntity = await _estimationRepositoryManager.Criterion.GetCriterionById(id, trackChanges);
 
         if (criterionEntity == null)
         {

@@ -1,5 +1,3 @@
 ﻿namespace diploma.Estimation.API.Dto;
 
-public class EstimateCriterionDtoForCreate
-{
-}
+public record EstimateCriterionDtoForCreate(double Value);
