@@ -46,17 +46,18 @@ public class EstimationService : EstimationServiceBase, IEstimationService
         }
     }
 
-    public Qualification MatchEstimateToPattern(Estimate estimate)
+    public int GetZeroLayerSize()
     {
-        var criteriaValueCollection = estimate.GetCriterionValueCollection();
+        return _sizeLayer0;
+    }
 
-        if (criteriaValueCollection.Length != _sizeLayer0)
-        {
-            throw new EstimationServiceBadPatternSizeException(estimate.Id);
-        }
+    public int GetFirstLayerSize()
+    {
+        return _sizeLayer1;
+    }
 
-        var patternIndex = TestPattern(criteriaValueCollection);
-
-        return (Qualification)patternIndex;
+    public int GetCountOfPatterns()
+    {
+        return _sizeLayer1;
     }
 }

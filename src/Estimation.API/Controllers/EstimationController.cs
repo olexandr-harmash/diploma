@@ -11,27 +11,21 @@ namespace Estimation.API.Controllers;
 [Route("/api/estimation")]
 public class EstimationController : ControllerBase
 {
-    private readonly IMapper _estimationMapper;
-    private readonly EstimationRepositoryManager _repositoryManager;
     private readonly EstimationServices _estimationServices;
     private readonly EstimationServiceManager _estimationServiceManager;
 
-    public EstimationController(EstimationServices estimationServices, EstimationRepositoryManager repositoryManager, IMapper estimationMapper)
+    public EstimationController(EstimationServices estimationServices)
     {
-        _repositoryManager = repositoryManager;
-        _estimationMapper = estimationMapper;
         _estimationServices = estimationServices;
         _estimationServiceManager = estimationServices.estimationServiceManager;
     }
 
-    [HttpGet("{estimationId:guid}/predict")]
+    [HttpGet("{estimationId:guid}/qualification")]
     public async Task<IResult> GetEstimation(Guid estimationId)
     {
-        var ent = await _repositoryManager.Estimate.GetEstimateById(estimationId, false);
+        var qualification = await _estimationServiceManager.Estimate.MatchEstimateToPattern(estimationId, false);
 
-        var res = _estimationServiceManager.Estimation.MatchEstimateToPattern(ent);
-
-        return TypedResults.Ok(res.ToString());
+        return TypedResults.Ok(qualification.ToString());
     }
 
     [HttpGet("{estimationId:guid}", Name = "GetEstimateById")]

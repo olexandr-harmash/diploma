@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using diploma.Estimation.API.Dto;
 using diploma.Estimation.API.Exceptions;
+using diploma.Estimation.API.Model;
 using diploma.Estimation.API.Repository;
 using diploma.Estimation.API.Services.Abstractions;
 
@@ -9,12 +10,14 @@ namespace diploma.Estimation.API.Services;
 public class EstimateService : IEstimateService
 {
     private readonly IMapper _estimationMapper;
+    private readonly IEstimationService _estimationService;
     private readonly EstimationRepositoryManager _estimationRepositoryManager;
 
-    public EstimateService(EstimationRepositoryManager estimationRepositoryManager, IMapper estimationMapper)
+    public EstimateService(EstimationRepositoryManager estimationRepositoryManager, IMapper estimationMapper, IEstimationService estimationService)
     {
         _estimationRepositoryManager = estimationRepositoryManager;
         _estimationMapper = estimationMapper;
+        _estimationService = estimationService;
     }
 
     public async Task<EstimateDto> CreateEstimate(EstimateDtoForCreate estimate)
@@ -46,6 +49,22 @@ public class EstimateService : IEstimateService
         var estimateForReturn = _estimationMapper.Map<EstimateDto>(estimateEntity);
 
         return estimateForReturn;
+    }
+
+    public async Task<EstimationService.Qualification> MatchEstimateToPattern(Guid estimateId, bool trackChanges)
+    {
+        var estimateEntity = await GetEstimateAndCheckIfExists(estimateId, trackChanges);
+
+        var criteriaValueCollection = estimateEntity.GetCriterionValueCollection();
+
+        if (criteriaValueCollection.Length != _estimationService.GetZeroLayerSize())
+        {
+            throw new EstimationServiceBadPatternSizeException(estimateId);
+        }
+
+        var patternIndex = _estimationService.TestPattern(criteriaValueCollection);
+
+        return (EstimationService.Qualification)patternIndex;
     }
 
     public async Task UpdateEstimate(Guid id, EstimateDtoForUpdate estimate, bool trackChanges)

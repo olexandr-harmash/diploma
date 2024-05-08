@@ -1,8 +1,9 @@
-﻿using static diploma.Estimation.API.Services.EstimationService;
-
-namespace diploma.Estimation.API.Services.Abstractions;
+﻿namespace diploma.Estimation.API.Services.Abstractions;
 
 public interface IEstimationService
 {
-    public Qualification MatchEstimateToPattern(Estimate estimate);
+    int TestPattern(double[] pattern);
+    int GetZeroLayerSize();
+    int GetFirstLayerSize();
+    int GetCountOfPatterns();
 }
