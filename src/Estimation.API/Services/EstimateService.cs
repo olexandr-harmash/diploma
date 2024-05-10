@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using diploma.Estimation.API.Dto;
 using diploma.Estimation.API.Exceptions;
-using diploma.Estimation.API.Model;
 using diploma.Estimation.API.Repository;
 using diploma.Estimation.API.Services.Abstractions;
 
@@ -23,7 +22,7 @@ public class EstimateService : IEstimateService
     public async Task<EstimateDto> CreateEstimate(EstimateDtoForCreate estimate)
     {
         var estimateEntity = _estimationMapper.Map<Estimate>(estimate);
-            
+
         _estimationRepositoryManager.Estimate.CreateEstimate(estimateEntity);
 
         await _estimationRepositoryManager.SaveChangesAsync();
