@@ -1,7 +1,5 @@
-using AutoMapper;
 using diploma.Estimation.API.Controllers;
 using diploma.Estimation.API.Dto;
-using diploma.Estimation.API.Repository;
 using diploma.Estimation.API.Services;
 using Microsoft.AspNetCore.Mvc;
 
