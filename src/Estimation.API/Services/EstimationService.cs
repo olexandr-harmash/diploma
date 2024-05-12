@@ -4,21 +4,26 @@ using diploma.Estimation.API.Services.Abstractions;
 
 namespace diploma.Estimation.API.Services;
 
-public class EstimationService : EstimationServiceBase, IEstimationService
+public enum Qualification
+{
+    Expert,
+    Senior,
+    Middle,
+    Junior,
+}
+
+public class EstimationService : IEstimationService
 {
     private string _setupFile = "pattern.json";
     private string _setupFolder = "Setup";
 
-    public enum Qualification
-    {
-        Expert,
-        Senior,
-        Middle,
-        Junior,
-    }
+    private IStrategyService _strategyService;
 
-    public EstimationService(IWebHostEnvironment env, ILogger<EstimationService> logger)
+    //TODO: Async initialize extension
+    public EstimationService(IWebHostEnvironment env, ILogger<EstimationService> logger, IStrategyService strategyService)
     {
+        _strategyService = strategyService;
+
         var contentRootPath = env.ContentRootPath;
         var sourcePath = Path.Combine(contentRootPath, _setupFolder, _setupFile);
 
@@ -35,9 +40,9 @@ public class EstimationService : EstimationServiceBase, IEstimationService
                 throw new EstimationServiceBadPatternSetupException(contentRootPath);
             }
 
-            _patterns = patterns;
+            _strategyService.SetPatterns(patterns);
 
-            Train();
+            _strategyService.Train();
         }
         catch (Exception ex)
         {
@@ -46,18 +51,13 @@ public class EstimationService : EstimationServiceBase, IEstimationService
         }
     }
 
-    public int GetZeroLayerSize()
+    public async Task<Qualification> TestPattern(double[] pattern)
     {
-        return _sizeLayer0;
-    }
+        if (pattern.Length != _strategyService.GetZeroLayerSize())
+        {
+            throw new EstimationServiceBadPatternSizeException();
+        }
 
-    public int GetFirstLayerSize()
-    {
-        return _sizeLayer1;
-    }
-
-    public int GetCountOfPatterns()
-    {
-        return _sizeLayer1;
+        return (Qualification) await _strategyService.TestPattern(pattern);
     }
 }

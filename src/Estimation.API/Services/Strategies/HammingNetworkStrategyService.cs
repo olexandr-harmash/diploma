@@ -1,21 +1,46 @@
-﻿using Microsoft.Extensions.FileSystemGlobbing.Internal;
+﻿using diploma.Estimation.API.Services.Abstractions;
 
-namespace diploma.Estimation.API.Services;
+namespace Estimation.API.Services.Strategies;
 
-public class EstimationServiceBase
+public class HammingNetworkStrategyService : IStrategyService
 {
-    protected const int T = 0;
-    protected const int MAX_ITER = 1400;
-    protected int _sizeLayer0;
-    protected int _sizeLayer1;
-    protected double _braking;
-    protected double[] _layer0;
-    protected double[] _layer1;
-    protected double[] _layer1Prev;
-    protected double[,] _weightHamming;
-    protected double[][] _patterns;
+    private const int T = 0; // Hopfield activate function constant, set to 0
+    private const int MAX_ITER = 1400; // Maximum number of iterations
 
-    public void Train()
+    private int _sizeLayer0; // Size of layer 0
+    private int _sizeLayer1; // Size of layer 1
+
+    private double _braking; // Braking parameter
+
+    private double[] _layer0; // Array representing layer 0
+    private double[] _layer1; // Array representing layer 1
+    private double[] _layer1Prev; // Array representing the previous state of layer 1
+
+    private double[][] _patterns; // 2D array representing patterns
+
+    private double[,] _weightHamming; // 2D array representing Hamming weights
+
+    public int GetZeroLayerSize()
+    {
+        return _sizeLayer0;
+    }
+
+    public int GetFirstLayerSize()
+    {
+        return _sizeLayer1;
+    }
+
+    public int GetCountOfPatterns()
+    {
+        return _sizeLayer1;
+    }
+
+    public void SetPatterns(double[][] patterns)
+    {
+        _patterns = patterns;
+    }
+
+    public Task Train()
     {
         _sizeLayer1 = _patterns.Count();
         _sizeLayer0 = _patterns.First().Count();
@@ -35,6 +60,25 @@ public class EstimationServiceBase
                 _weightHamming[fi, i] = _layer0[i] * 0.5;
             }
         }
+
+        return Task.CompletedTask;
+    }
+
+    public Task<int> TestPattern(double[] pattern)
+    {
+        _layer0 = pattern;
+
+        StepHamming();
+        for (int i = 0; i < MAX_ITER; i++)
+        {
+            StepHopfield();
+            if (StableHopfield())
+                break;
+        }
+
+        var patternIndex = Array.IndexOf(_layer1, _layer1.Max());
+
+        return Task.FromResult(patternIndex);
     }
 
     private bool StableHopfield()
@@ -85,20 +129,5 @@ public class EstimationServiceBase
         {
             _layer1[i] = StateHamming(i);
         }
-    }
-
-    public int TestPattern(double[] pattern)
-    {
-        _layer0 = pattern;
-
-        StepHamming();
-        for (int i = 0; i < MAX_ITER; i++)
-        {
-            StepHopfield();
-            if (StableHopfield())
-                break;
-        }
-
-        return Array.IndexOf(_layer1, _layer1.Max());
     }
 }

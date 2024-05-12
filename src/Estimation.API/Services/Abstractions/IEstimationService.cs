@@ -2,8 +2,5 @@
 
 public interface IEstimationService
 {
-    int TestPattern(double[] pattern);
-    int GetZeroLayerSize();
-    int GetFirstLayerSize();
-    int GetCountOfPatterns();
+    Task<Qualification> TestPattern(double[] pattern);
 }
