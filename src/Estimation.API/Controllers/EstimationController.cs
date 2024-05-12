@@ -1,6 +1,7 @@
 using diploma.Estimation.API.Controllers;
 using diploma.Estimation.API.Dto;
 using diploma.Estimation.API.Services;
+using diploma.Projects.API.Infrastructure.Filters;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Estimation.API.Controllers;
@@ -35,6 +36,7 @@ public class EstimationController : ControllerBase
     }
 
     [HttpPost]
+    [ServiceFilter(typeof(ValidationAttributeFilter))]
     public async Task<IResult> CreateEstimate([FromBody] EstimateDtoForCreate estimateForCreate)
     {
         var estimateDto = await _estimationServiceManager.Estimate.CreateEstimate(estimateForCreate);
@@ -43,6 +45,7 @@ public class EstimationController : ControllerBase
     }
 
     [HttpPut]
+    [ServiceFilter(typeof(ValidationAttributeFilter))]
     public async Task<IResult> UpdateEstimate(Guid estimationId, [FromBody] EstimateDtoForUpdate estimateForUpdate)
     {
         await _estimationServiceManager.Estimate.UpdateEstimate(estimationId, estimateForUpdate, false);

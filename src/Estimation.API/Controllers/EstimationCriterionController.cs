@@ -1,5 +1,6 @@
 ﻿using diploma.Estimation.API.Dto;
 using diploma.Estimation.API.Services;
+using diploma.Projects.API.Infrastructure.Filters;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -27,6 +28,7 @@ public class EstimationCriterionController
     }
 
     [HttpPost("criterion/{criterionId:guid}")]
+    [ServiceFilter(typeof(ValidationAttributeFilter))]
     public async Task<IResult> CreateEstimateCriterion(Guid estimationId, Guid criterionId, [FromBody] EstimateCriterionDtoForCreate estimateForCreate)
     {
         var estimateCriterionDto = await _estimationServiceManager.EstimateCriterion.CreateEstimateCriterion(estimationId, criterionId, estimateForCreate, false);
@@ -42,6 +44,7 @@ public class EstimationCriterionController
     }
 
     [HttpPut("criterion/{criterionId:guid}")]
+    [ServiceFilter(typeof(ValidationAttributeFilter))]
     public async Task<IResult> UpdateEstimateCriterion(Guid estimationId, Guid criterionId, [FromBody] EstimateCriterionDtoForUpdate estimateForUpdate)
     {
         await _estimationServiceManager.EstimateCriterion.UpdateEstimateCriterion(estimationId, criterionId, estimateForUpdate, false);
