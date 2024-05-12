@@ -6,6 +6,7 @@ using diploma.Estimation.API.Repository.Abstractions;
 using diploma.Estimation.API.Repository;
 using diploma.Estimation.API.Services.Abstractions;
 using diploma.Estimation.API.Controllers;
+using diploma.Projects.API.Infrastructure.Filters;
 
 namespace diploma.Estimation.API.Extensions;
 
@@ -47,19 +48,20 @@ public static class Extensions
         });
 
         builder.Services.AddScoped<EstimationServices>();
+        builder.Services.AddScoped<ValidationAttributeFilter>();
 
-        builder.Services.AddScoped<ICriterionRepository, CriterionRepository>();
         builder.Services.AddScoped<IEstimateRepository, EstimateRepository>();
+        builder.Services.AddScoped<ICriterionRepository, CriterionRepository>();
         builder.Services.AddScoped<IEstimateCriterionRepository, EstimateCriterionRepository>();
 
-        builder.Services.AddScoped<ICriterionService, CriterionService>();
         builder.Services.AddScoped<IEstimateService, EstimateService>();
+        builder.Services.AddScoped<ICriterionService, CriterionService>();
         builder.Services.AddScoped<IEstimateCriterionService, EstimateCriterionService>();
 
-        builder.Services.AddSingleton<IEstimationService, EstimationService>();
-
-        builder.Services.AddScoped<EstimationRepositoryManager>();
         builder.Services.AddScoped<EstimationServiceManager>();
+        builder.Services.AddScoped<EstimationRepositoryManager>();
+  
+        builder.Services.AddSingleton<IEstimationService, EstimationService>();
 
         if (builder.Environment.IsDevelopment())
         {

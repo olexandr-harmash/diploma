@@ -10,6 +10,7 @@
   <ItemGroup>
     <Compile Include="..\Shared\MigrateDbContextExtensions.cs" Link="Extensions\MigrateDbContextExtensions.cs" />
 	<Compile Include="..\Shared\Exceptions\*.cs" Link="Infrastructure\Exceptions\%(FileName)%(Extension)" />
+	<Compile Include="..\Shared\Filters\*.cs" Link="Infrastructure\Filters\%(FileName)%(Extension)" />
     <Compile Include="..\Shared\RepositoryBase.cs" Link="Repository\RepositoryBase.cs" />
   </ItemGroup>
 
