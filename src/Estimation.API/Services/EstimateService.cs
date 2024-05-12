@@ -50,20 +50,15 @@ public class EstimateService : IEstimateService
         return estimateForReturn;
     }
 
-    public async Task<EstimationService.Qualification> MatchEstimateToPattern(Guid estimateId, bool trackChanges)
+    public async Task<Qualification> MatchEstimateToPattern(Guid estimateId, bool trackChanges)
     {
         var estimateEntity = await GetEstimateAndCheckIfExists(estimateId, trackChanges);
 
         var criteriaValueCollection = estimateEntity.GetCriterionValueCollection();
 
-        if (criteriaValueCollection.Length != _estimationService.GetZeroLayerSize())
-        {
-            throw new EstimationServiceBadPatternSizeException(estimateId);
-        }
+        var patternIndex = await _estimationService.TestPattern(criteriaValueCollection);
 
-        var patternIndex = _estimationService.TestPattern(criteriaValueCollection);
-
-        return (EstimationService.Qualification)patternIndex;
+        return patternIndex;
     }
 
     public async Task UpdateEstimate(Guid id, EstimateDtoForUpdate estimate, bool trackChanges)

@@ -2,5 +2,5 @@
 
 public class EstimationServiceBadPatternSizeException : Exception
 {
-    public EstimationServiceBadPatternSizeException(Guid estimateId) : base($"Failed match estimate to pattern with estimateId: {estimateId} due to criterions mismatch.") { }
+    public EstimationServiceBadPatternSizeException() : base($"Failed match estimate to pattern due to criterions mismatch.") { }
 }

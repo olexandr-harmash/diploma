@@ -7,6 +7,7 @@ using diploma.Estimation.API.Repository;
 using diploma.Estimation.API.Services.Abstractions;
 using diploma.Estimation.API.Controllers;
 using diploma.Projects.API.Infrastructure.Filters;
+using Estimation.API.Services.Strategies;
 
 namespace diploma.Estimation.API.Extensions;
 
@@ -60,7 +61,9 @@ public static class Extensions
 
         builder.Services.AddScoped<EstimationServiceManager>();
         builder.Services.AddScoped<EstimationRepositoryManager>();
-  
+
+        //TODO: create builder extension for estimation service and his strategies
+        builder.Services.AddSingleton<IStrategyService, HammingNetworkStrategyService>();
         builder.Services.AddSingleton<IEstimationService, EstimationService>();
 
         if (builder.Environment.IsDevelopment())
