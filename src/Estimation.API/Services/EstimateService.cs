@@ -3,7 +3,6 @@ using diploma.Estimation.API.Dto;
 using diploma.Estimation.API.Exceptions;
 using diploma.Estimation.API.Repository;
 using diploma.Estimation.API.Services.Abstractions;
-using diploma.HammingNetwork;
 using diploma.HammingNetwork.Abstractions;
 using diploma.Network.Abstractions;
 
@@ -61,13 +60,24 @@ public class EstimateService : IEstimateService
         return estimateForReturn;
     }
 
-    public async Task<Qualification> MatchEstimateToPattern(Guid estimateId, bool trackChanges)
+    public async Task<Qualification> MatchEstimateToPattern(Guid estimateId, string strategy, bool trackChanges)
     {
         var estimateEntity = await GetEstimateAndCheckIfExists(estimateId, trackChanges);
 
-        var criteriaValueCollection = estimateEntity.GetCriterionValueCollection();
+        var criteriaValueArray = estimateEntity.GetCriterionValueCollection();
 
-        return await HammingNetworkAdapter.ExecuteStrategy(_networkContext, criteriaValueCollection);
+        CancellationTokenSource source = new CancellationTokenSource();
+
+        var index = await _networkContext.ExecuteStrategy<HammingNetworkStrategyModel, int, IHammingNetworkStrategy>(
+            strategy,
+            new HammingNetworkStrategyModel
+            {
+                pattern = criteriaValueArray
+            },
+            source.Token
+          );
+
+        return (Qualification)index;
     }
 
     public async Task UpdateEstimate(Guid id, EstimateDtoForUpdate estimate, bool trackChanges)
@@ -89,18 +99,5 @@ public class EstimateService : IEstimateService
         }
 
         return estimateEntity;
-    }
-
-    // TODO: adapter classes for strategies
-    private class HammingNetworkAdapter()
-    {
-        public static async Task<Qualification> ExecuteStrategy(INetworkContext context, double[] pattern)
-        {
-            CancellationTokenSource source = new CancellationTokenSource();
-
-            var index = await context.ExecuteStrategy<double[], int, IHammingNetworkStrategy>("HammingNetworkStrategy", pattern, source.Token);
-
-            return (Qualification)index;
-        }
     }
 }
