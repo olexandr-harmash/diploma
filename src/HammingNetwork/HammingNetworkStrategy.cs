@@ -77,9 +77,9 @@ public class HammingNetworkStrategy : IHammingNetworkStrategy
         }
     }
 
-    public Task<int> Execute(double[] pattern, CancellationToken cancellationToken)
+    public Task<int> Execute(HammingNetworkStrategyModel model, CancellationToken cancellationToken)
     {
-        _layer0 = pattern;
+        _layer0 = model.pattern;
 
         StepHamming();
         for (int i = 0; i < MAX_ITER; i++)

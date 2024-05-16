@@ -19,10 +19,10 @@ public class EstimationController : ControllerBase
         _estimationServiceManager = estimationServices.estimationServiceManager;
     }
 
-    [HttpGet("{estimationId:guid}/qualification")]
-    public async Task<IResult> GetEstimation(Guid estimationId)
+    [HttpGet("{estimationId:guid}/qualification/{strategy}")]
+    public async Task<IResult> GetEstimation(Guid estimationId, string strategy)
     {
-        var qualification = await _estimationServiceManager.Estimate.MatchEstimateToPattern(estimationId, false);
+        var qualification = await _estimationServiceManager.Estimate.MatchEstimateToPattern(estimationId, strategy, false);
 
         return TypedResults.Ok(qualification.ToString());
     }

@@ -1,5 +1,5 @@
 ﻿namespace diploma.HammingNetwork.Abstractions;
 
-public interface IHammingNetworkStrategy : INetworkStrategy<double[], int>
+public interface IHammingNetworkStrategy : INetworkStrategy<HammingNetworkStrategyModel, int>
 {
 }
