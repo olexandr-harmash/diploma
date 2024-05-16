@@ -38,7 +38,7 @@ public class HammingNetworkStrategy : IHammingNetworkStrategy
         try
         {
             ArgumentNullException.ThrowIfNull(sourcePath);
-
+            Console.WriteLine(sourcePath);
             var sourceJson = File.ReadAllText(sourcePath);
             var patterns = JsonSerializer.Deserialize<double[][]>(sourceJson);
 

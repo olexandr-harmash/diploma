@@ -11,6 +11,7 @@
     <Compile Include="..\Shared\MigrateDbContextExtensions.cs" Link="Extensions\MigrateDbContextExtensions.cs" />
 	<Compile Include="..\Shared\Exceptions\*.cs" Link="Infrastructure\Exceptions\%(FileName)%(Extension)" />
 	<Compile Include="..\Shared\Filters\*.cs" Link="Infrastructure\Filters\%(FileName)%(Extension)" />
+	<Content Remove="Setup\pattern.json" />
     <Compile Include="..\Shared\RepositoryBase.cs" Link="Repository\RepositoryBase.cs" />
   </ItemGroup>
 
@@ -26,6 +27,14 @@
 
   <ItemGroup>
     <Folder Include="Infrastructure\Migrations\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Setup\pattern.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+	<ProjectReference Include="..\HammingNetwork\HammingNetwork.csproj" />
   </ItemGroup>
 
 </Project>
