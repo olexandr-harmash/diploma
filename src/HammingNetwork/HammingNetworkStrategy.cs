@@ -1,11 +1,14 @@
-﻿using diploma.Estimation.API.Services.Abstractions;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using System.Text.Json;
 
-namespace Estimation.API.Services.Strategies;
+namespace diploma.HammingNetwork;
 
-public class HammingNetworkStrategyService : IStrategyService
+public class HammingNetworkStrategy : IHammingNetworkStrategy
 {
-    private const int T = 0; // Hopfield activate function constant, set to 0
-    private const int MAX_ITER = 1400; // Maximum number of iterations
+    private readonly int T; // Hopfield activate function constant, set to 0
+    private readonly int MAX_ITER; // Maximum number of iterations
 
     private int _sizeLayer0; // Size of layer 0
     private int _sizeLayer1; // Size of layer 1
@@ -18,29 +21,41 @@ public class HammingNetworkStrategyService : IStrategyService
 
     private double[][] _patterns; // 2D array representing patterns
 
-    private double[,] _weightHamming; // 2D array representing Hamming weights
+    private double[, ] _weightHamming; // 2D array representing Hamming weights
 
-    public int GetZeroLayerSize()
+    // TODO: data loader abstract class and validator to Network project,
+    // and implement this like HammingNetworkbase class to initialize hamming fields
+    // with options to setup paths
+    public HammingNetworkStrategy(IWebHostEnvironment env, ILogger<HammingNetworkStrategy> logger, IOptions<HammingNetworkStrategyOptions> options)
     {
-        return _sizeLayer0;
+        var _options = options.Value;
+
+        T = _options.T;
+        MAX_ITER = _options.MAX_ITER;
+
+        var sourcePath = Path.Combine(env.ContentRootPath, "Setup", "pattern.json");
+
+        try
+        {
+            ArgumentNullException.ThrowIfNull(sourcePath);
+            Console.WriteLine(sourcePath);
+            var sourceJson = File.ReadAllText(sourcePath);
+            var patterns = JsonSerializer.Deserialize<double[][]>(sourceJson);
+
+            ArgumentNullException.ThrowIfNull(patterns);
+
+            _patterns = patterns;
+
+            Train();
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex.Message, ex);
+            throw;
+        }
     }
 
-    public int GetFirstLayerSize()
-    {
-        return _sizeLayer1;
-    }
-
-    public int GetCountOfPatterns()
-    {
-        return _sizeLayer1;
-    }
-
-    public void SetPatterns(double[][] patterns)
-    {
-        _patterns = patterns;
-    }
-
-    public Task Train()
+    public void Train()
     {
         _sizeLayer1 = _patterns.Count();
         _sizeLayer0 = _patterns.First().Count();
@@ -60,11 +75,9 @@ public class HammingNetworkStrategyService : IStrategyService
                 _weightHamming[fi, i] = _layer0[i] * 0.5;
             }
         }
-
-        return Task.CompletedTask;
     }
 
-    public Task<int> TestPattern(double[] pattern)
+    public Task<int> Execute(double[] pattern, CancellationToken cancellationToken)
     {
         _layer0 = pattern;
 

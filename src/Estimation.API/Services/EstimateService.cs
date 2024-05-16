@@ -3,20 +3,31 @@ using diploma.Estimation.API.Dto;
 using diploma.Estimation.API.Exceptions;
 using diploma.Estimation.API.Repository;
 using diploma.Estimation.API.Services.Abstractions;
+using diploma.HammingNetwork;
+using diploma.HammingNetwork.Abstractions;
+using diploma.Network.Abstractions;
 
 namespace diploma.Estimation.API.Services;
+
+public enum Qualification
+{
+    EXPERT,
+    SENIOR,
+    MIDDLE,
+    JUNIOR
+}
 
 public class EstimateService : IEstimateService
 {
     private readonly IMapper _estimationMapper;
-    private readonly IEstimationService _estimationService;
+    private readonly INetworkContext _networkContext;
     private readonly EstimationRepositoryManager _estimationRepositoryManager;
 
-    public EstimateService(EstimationRepositoryManager estimationRepositoryManager, IMapper estimationMapper, IEstimationService estimationService)
+    public EstimateService(EstimationRepositoryManager estimationRepositoryManager, IMapper estimationMapper, INetworkContext networkContext)
     {
         _estimationRepositoryManager = estimationRepositoryManager;
         _estimationMapper = estimationMapper;
-        _estimationService = estimationService;
+        _networkContext = networkContext;
     }
 
     public async Task<EstimateDto> CreateEstimate(EstimateDtoForCreate estimate)
@@ -56,9 +67,7 @@ public class EstimateService : IEstimateService
 
         var criteriaValueCollection = estimateEntity.GetCriterionValueCollection();
 
-        var patternIndex = await _estimationService.TestPattern(criteriaValueCollection);
-
-        return patternIndex;
+        return await HammingNetworkAdapter.ExecuteStrategy(_networkContext, criteriaValueCollection);
     }
 
     public async Task UpdateEstimate(Guid id, EstimateDtoForUpdate estimate, bool trackChanges)
@@ -80,5 +89,18 @@ public class EstimateService : IEstimateService
         }
 
         return estimateEntity;
+    }
+
+    // TODO: adapter classes for strategies
+    private class HammingNetworkAdapter()
+    {
+        public static async Task<Qualification> ExecuteStrategy(INetworkContext context, double[] pattern)
+        {
+            CancellationTokenSource source = new CancellationTokenSource();
+
+            var index = await context.ExecuteStrategy<double[], int, IHammingNetworkStrategy>("HammingNetworkStrategy", pattern, source.Token);
+
+            return (Qualification)index;
+        }
     }
 }
