@@ -68,12 +68,13 @@ public class EstimateService : IEstimateService
 
         CancellationTokenSource source = new CancellationTokenSource();
 
-        var index = await _networkContext.ExecuteStrategy<HammingNetworkStrategyModel, int, IHammingNetworkStrategy>(
+        var index = await _networkContext.ExecuteStrategy<HammingNetworkStrategyModel, int, Estimate, IHammingNetworkStrategy>(
             strategy,
             new HammingNetworkStrategyModel
             {
                 pattern = criteriaValueArray
             },
+            estimateEntity,
             source.Token
           );
 
