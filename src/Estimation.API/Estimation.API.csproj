@@ -9,17 +9,17 @@
 
   <ItemGroup>
     <Compile Include="..\Shared\MigrateDbContextExtensions.cs" Link="Extensions\MigrateDbContextExtensions.cs" />
-	<Compile Include="..\Shared\Exceptions\*.cs" Link="Infrastructure\Exceptions\%(FileName)%(Extension)" />
-	<Compile Include="..\Shared\Filters\*.cs" Link="Infrastructure\Filters\%(FileName)%(Extension)" />
-	<Content Remove="Setup\pattern.json" />
+	  <Compile Include="..\Shared\Exceptions\*.cs" Link="Infrastructure\Exceptions\%(FileName)%(Extension)" />
+	  <Compile Include="..\Shared\Filters\*.cs" Link="Infrastructure\Filters\%(FileName)%(Extension)" />
+	  <Content Remove="Setup\pattern.json" />
     <Compile Include="..\Shared\RepositoryBase.cs" Link="Repository\RepositoryBase.cs" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="13.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.4" />
-	<PackageReference Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.0-preview.2.23619.3" />
-	<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.4">
+	  <PackageReference Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.0-preview.2.23619.3" />
+	  <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.4">
 	  <PrivateAssets>all</PrivateAssets>
 	  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 	</PackageReference>
@@ -34,7 +34,7 @@
   </ItemGroup>
 
   <ItemGroup>
-	<ProjectReference Include="..\HammingNetwork\HammingNetwork.csproj" />
+	  <ProjectReference Include="..\HammingNetwork\HammingNetwork.csproj" />
   </ItemGroup>
 
 </Project>

@@ -143,4 +143,9 @@ public class HammingNetworkStrategy : IHammingNetworkStrategy
             _layer1[i] = StateHamming(i);
         }
     }
+
+    public object GetState()
+    {
+        return new HammingNetworkState(T, _braking, _layer0, _layer1);
+    }
 }
